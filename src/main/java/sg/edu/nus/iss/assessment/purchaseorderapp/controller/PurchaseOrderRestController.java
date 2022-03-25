@@ -41,18 +41,24 @@ public class PurchaseOrderRestController {
         } catch (Exception e) {
             logger.log(Level.INFO, "Unable to get payload");
             body = Json.createObjectBuilder().add("error", e.getMessage()).build();
+            return ResponseEntity.ok(body.toString());
         }
         
         List<String> poList = new ArrayList<>();
         for (int i=0; i< body.getJsonArray("lineItems").size(); i++){
             String itemToAdd = body.getJsonArray("lineItems").getJsonObject(i).get("item").toString();
-            // if (!poList.contains(itemToAdd))
             poList.add(itemToAdd);
         }  
         logger.log(Level.INFO, poList.toString());
 
         Quotation quotation = new Quotation();
-        quotation = service.getQuotations(poList).get();
+
+        try {
+            quotation = service.getQuotations(poList).get();
+        } catch (NullPointerException e) {
+            body = Json.createObjectBuilder().add("error", e.getMessage()).build();
+            return ResponseEntity.ok(body.toString());
+        }
 
         Float totalAmount = (float) 0;
         for (String items : poList){
