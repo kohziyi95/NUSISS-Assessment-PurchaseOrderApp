@@ -54,41 +54,12 @@ public class QuotationService {
         JsonReader reader = Json.createReader(is);
         JsonObject data = reader.readObject();
         logger.log(Level.INFO, data.toString());
-        // HttpHeaders headers = new HttpHeaders();
-        // headers.setContentType(MediaType.APPLICATION_JSON);
-        // headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-
-        // logger.log(Level.INFO, "Headers >>> " + headers.toString());
-
-        
-        // HttpEntity<String> entity = new HttpEntity<>(items.toString(), headers);
-
-        // ResponseEntity<String> response = template.postForEntity(url, entity, String.class);
-        
-        // logger.log(Level.INFO, "response status >>>> " + response.getStatusCode().toString());
-        
-        
-        // JsonObject data = null;
-
-        // if (response.getStatusCode() == HttpStatus.CREATED) {
-        //     InputStream is = new ByteArrayInputStream(response.getBody().getBytes());
-        //     JsonReader reader = Json.createReader(is);
-        //     data = reader.readObject();
-        //     logger.log(Level.INFO, "HTTP created");
-
-
-        // } else {
-        //     logger.log(Level.SEVERE, "Fail to get response");
-        //     return null;
-        // }
-
+ 
         
         Quotation quotation = new Quotation();
         quotation.setQuoteId(data.getString("quoteId"));
-        // quotation.setQuotations("quotations");
         JsonArray quoteData = data.getJsonArray("quotations");
-        // quoteData.keySet();
-        // Iterator<String> itr = quoteData.keySet().iterator();
+
         for (int i = 0; i < quoteData.size(); i++){
             Float unitPrice = Float.parseFloat(quoteData.getJsonObject(i).get("unitPrice").toString());
             logger.log(Level.INFO, "unitPrice >>>> " + unitPrice.toString());
@@ -102,7 +73,6 @@ public class QuotationService {
         Optional<Quotation> opt = Optional.of(quotation);
 
         return opt;
-        // return null;
     }
 
 

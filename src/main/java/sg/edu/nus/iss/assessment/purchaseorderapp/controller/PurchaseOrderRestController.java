@@ -63,11 +63,12 @@ public class PurchaseOrderRestController {
                     .get();
             logger.log(Level.INFO, "item found >>> " + item);
             int numberOfItems = item.getInt("quantity");
-            Float cost = quotation.getQuotation(items) * numberOfItems;
+            Float cost = quotation.getQuotation(item.getString("item")) * numberOfItems;
             logger.log(Level.INFO, "item costs >>> " + cost);
             logger.log(Level.INFO, items + "  qty: " + numberOfItems + " >>>>  $" + cost);
             totalAmount += cost;
         }
+        logger.log(Level.INFO, totalAmount.toString());
 
         JsonObject result = Json.createObjectBuilder()
                 .add("invoiceId", quotation.getQuoteId())
