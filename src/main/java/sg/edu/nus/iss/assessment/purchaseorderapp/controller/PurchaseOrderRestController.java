@@ -1,6 +1,7 @@
 package sg.edu.nus.iss.assessment.purchaseorderapp.controller;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,17 +51,20 @@ public class PurchaseOrderRestController {
         }  
         logger.log(Level.INFO, poList.toString());
 
-        Quotation quotation = service.getQuotations(poList).get();
+        Quotation quotation = new Quotation();
+        quotation = service.getQuotations(poList).get();
 
         Float totalAmount = (float) 0;
         for (String items : poList){
             JsonObject item = (JsonObject) body.getJsonArray("lineItems")
                     .stream()
-                    .filter(v-> ((JsonObject) v).get("item").equals(items))
+                    .filter(v-> ((JsonObject) v).get("item").toString().equals(items))
                     .findFirst()
                     .get();
+            logger.log(Level.INFO, "item found >>> " + item);
             int numberOfItems = item.getInt("quantity");
             Float cost = quotation.getQuotation(items) * numberOfItems;
+            logger.log(Level.INFO, "item costs >>> " + cost);
             logger.log(Level.INFO, items + "  qty: " + numberOfItems + " >>>>  $" + cost);
             totalAmount += cost;
         }
